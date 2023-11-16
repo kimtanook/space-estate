@@ -1,21 +1,16 @@
 "use client";
 
-import {rotateState} from "@/utils/atom";
 import {planetData} from "@/utils/planetData";
-import {useRecoilState} from "recoil";
 import styled from "styled-components";
 import MenuButton from "./MenuButton";
 
 function TopMenu() {
   const data = planetData;
-
-  const [rotate, setRotate] = useRecoilState(rotateState);
-
+  const sliceData = data.slice(1);
   return (
     <Wrap>
-      <button onClick={() => setRotate(!rotate)}>회전</button>
       <Box>
-        {data.map((item: any, index: number) => (
+        {sliceData.map((item: any, index: number) => (
           <MenuButton key={index} item={item} />
         ))}
       </Box>
@@ -27,8 +22,8 @@ export default TopMenu;
 
 const Wrap = styled.div`
   width: 80vw;
-  height: 120px;
-  background-color: aqua;
+  max-width: 1000px;
+  border-radius: 12px;
   position: absolute;
   top: 0px;
   left: 50%;
@@ -36,7 +31,22 @@ const Wrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  overflow: scroll;
+  margin-top: 40px;
+  overflow-x: scroll;
+  &:hover {
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #ffffff; /* 스크롤바의 색상 */
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: none; /*스크롤바 뒷 배경 색상*/
+    }
+  }
 `;
 const Box = styled.div`
   height: 100%;
@@ -44,4 +54,5 @@ const Box = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin: auto;
 `;

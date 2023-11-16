@@ -1,12 +1,13 @@
-import {hoverPlanetState, rotateState} from "@/utils/atom";
+import {LoadingState, hoverPlanetState} from "@/utils/atom";
 import {useFrame, useLoader} from "@react-three/fiber";
 import {useRouter} from "next/navigation";
 import {memo, useEffect, useRef} from "react";
-import {useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import * as THREE from "three";
 import {Mesh, Object3D, TextureLoader} from "three";
 import TWEEN from "three/examples/jsm/libs/tween.module.js";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js";
+import Loading from "./Loading";
 
 function Planet({
   name,
@@ -19,7 +20,8 @@ function Planet({
 
   const planetRef = useRef<Object3D>();
 
-  const rotate = useRecoilValue(rotateState);
+  const [loading, setLoading] = useRecoilState(LoadingState);
+
   const hoverPlanet = useRecoilValue(hoverPlanetState);
 
   const planetModel = useLoader(OBJLoader, `/space/${name}/${name}.obj`);
@@ -27,14 +29,22 @@ function Planet({
 
   const revolutionSpeed = revolutionSpeeds;
   const revolutionDistance = revolutionDistances;
+
+  const detailPlanet = () => {
+    if (name === "Sun") {
+      return;
+    }
+    router.push(`/planet/${name}`);
+  };
+
   useEffect(() => {
     const initialAngle = Math.random() * Math.PI * 2; // 초기 각도 랜덤
-    new TWEEN.Tween({angle: 0})
-      .to({angle: 0 + Math.PI * 2}, 10000 / revolutionSpeed)
+    new TWEEN.Tween({angle: initialAngle})
+      .to({angle: initialAngle + Math.PI * 2}, 10000 / revolutionSpeed)
       .easing(TWEEN.Easing.Linear.None)
       .onUpdate(() => {
         const time = performance.now();
-        const angle = 0 + (revolutionSpeed * time) / 20;
+        const angle = initialAngle + (revolutionSpeed * time) / 20;
         const x = Math.cos(angle) * revolutionDistance;
         const z = Math.sin(angle) * revolutionDistance;
 
@@ -42,7 +52,7 @@ function Planet({
       })
 
       .start();
-  }, [rotate]);
+  }, []);
 
   useFrame(() => {
     if (planetRef.current) {
@@ -52,12 +62,26 @@ function Planet({
   });
   useEffect(() => {
     // 모델에 텍스처를 입힙니다.
-    planetModel.traverse((child: THREE.Object3D[]) => {
+    planetModel?.traverse((child: THREE.Object3D) => {
       if (child instanceof Mesh) {
+        child.material.color.set(0xffffff);
         child.material.map = texture;
         child.castShadow = true;
         child.receiveShadow = true;
+        child.scale.x = scale[0];
+        child.scale.y = scale[1];
+        child.scale.z = scale[2];
       }
+      if (child instanceof Mesh && name === hoverPlanet) {
+        child.material.color.set("#ffaefe"); // 빨간색
+        child.material.map = texture;
+        child.castShadow = true;
+        child.receiveShadow = true;
+        child.scale.x = scale[0] * 1.2;
+        child.scale.y = scale[1] * 1.2;
+        child.scale.z = scale[2] * 1.2;
+      }
+
       if (child instanceof Mesh && child.name === "13913_Sun") {
         child.material = new THREE.MeshStandardMaterial({
           map: texture, // 텍스처 설정
@@ -71,10 +95,13 @@ function Planet({
     });
   }, [hoverPlanet]);
 
-  const detailPlanet = () => {
-    console.log("name");
-    router.push(`/planet/${name}`);
-  };
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    <Loading />;
+  }
 
   return (
     <primitive
@@ -82,8 +109,7 @@ function Planet({
       ref={planetRef}
       object={planetModel}
       position={position}
-      scale={scale}
-    ></primitive>
+    />
   );
 }
 export default memo(Planet);

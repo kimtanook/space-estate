@@ -1,18 +1,30 @@
 import {hoverPlanetState} from "@/utils/atom";
+import {useRouter} from "next/navigation";
 import {useRecoilState} from "recoil";
 import styled from "styled-components";
 
 function MenuButton({item}: any) {
+  const router = useRouter();
+
   const [hoverItem, setHoverItem] = useRecoilState(hoverPlanetState);
-  console.log("hoverItem : ", hoverItem);
+
   const onHover = () => {
     setHoverItem(item.name);
   };
   const outHover = () => {
     setHoverItem("");
   };
+
+  const onClickPlanetDetail = () => {
+    router.push(`/planet/${item.name}`);
+  };
+
   return (
-    <Button onMouseOver={onHover} onMouseLeave={outHover}>
+    <Button
+      onClick={onClickPlanetDetail}
+      onMouseOver={onHover}
+      onMouseLeave={outHover}
+    >
       {item.name}
     </Button>
   );
@@ -21,8 +33,17 @@ function MenuButton({item}: any) {
 export default MenuButton;
 
 const Button = styled.button`
-  background-color: red;
+  background-color: black;
+  color: white;
+  border: 1px solid #c8c8c8;
+  border-radius: 8px;
   width: 80px;
   height: 40px;
   margin: 12px;
+  transition: 0.3s;
+  &:hover {
+    background-color: white;
+    color: black;
+    transition: 0.3s;
+  }
 `;

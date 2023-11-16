@@ -1,9 +1,17 @@
 import {useLoader} from "@react-three/fiber";
 import {usePathname} from "next/navigation";
-import {Color, Mesh, MeshStandardMaterial, TextureLoader} from "three";
+import {useEffect, useRef} from "react";
+import {
+  Color,
+  DoubleSide,
+  Mesh,
+  MeshStandardMaterial,
+  TextureLoader,
+} from "three";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js";
 
 function DetailPlanet() {
+  const planetRef = useRef<THREE.Object3D>(null);
   const pathname = usePathname();
   const planetName = pathname.split("/planet/")[1];
 
@@ -18,9 +26,14 @@ function DetailPlanet() {
 
   planetModel.traverse((child: THREE.Object3D[]) => {
     if (child instanceof Mesh) {
+      child.material.color.set(0xffffff); // 빨간색
       child.material.map = texture;
       child.castShadow = true;
       child.receiveShadow = true;
+      child.scale.x = 25;
+      child.scale.y = 25;
+      child.scale.z = 25;
+      child.material.side = DoubleSide;
     }
     if (child instanceof Mesh && child.name === "13913_Sun") {
       child.material = new MeshStandardMaterial({
@@ -34,11 +47,13 @@ function DetailPlanet() {
     }
   });
 
-  console.log("planetModel : ", planetModel);
+  useEffect(() => {
+    planetRef.current?.position.set(0, 0, 0);
+  }, []);
 
   return (
     <>
-      <primitive object={planetModel} />
+      <primitive ref={planetRef} object={planetModel} />
     </>
   );
 }

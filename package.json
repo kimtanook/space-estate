@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-three/drei": "^9.88.11",
     "@react-three/fiber": "^8.15.9",
+    "@tanstack/react-query": "^5.8.3",
     "@tweenjs/tween.js": "^21.0.0",
     "@types/node": "20.8.9",
     "@types/react": "18.2.33",
@@ -19,6 +20,7 @@
     "@types/three": "^0.156.0",
     "@types/tweenjs": "^1.0.6",
     "@types/uuid": "^9.0.4",
+    "axios": "^1.6.1",
     "babel-plugin-styled-components": "^2.1.4",
     "eslint": "8.52.0",
     "eslint-config-next": "14.0.0",
