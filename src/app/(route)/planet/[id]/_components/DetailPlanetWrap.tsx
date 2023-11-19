@@ -7,12 +7,14 @@ import {Canvas} from "@react-three/fiber";
 import {usePathname} from "next/navigation";
 import {useEffect, useState} from "react";
 import styled from "styled-components";
+import Chart from "./Chart";
 import DetailPlanet from "./DetailPlanet";
 
 function DetailPlanetWrap() {
   const pathname = usePathname();
   const planetName: string = pathname.split("/planet/")[1];
-  const [planetPrice, setPlanetPrice] = useState({}) as any;
+  const [planetPrice, setPlanetPrice] = useState("");
+  const [allDayPrice, setAllDayPrice] = useState<any>(["price"]);
 
   const infoData: {[key: string]: {[key: string]: string}} = planetInfoData;
   const keys: string[] = Object.keys(infoData[planetName]);
@@ -29,20 +31,17 @@ function DetailPlanetWrap() {
     return infoDiv;
   };
 
-  setTimeout(() => {
-    getPlanetPriceData().then((response) => {
-      response.data.planets.map((item: any) => {
-        item.name === planetName && setPlanetPrice(item);
-      });
-    });
-  }, 60000);
-
   useEffect(() => {
-    getPlanetPriceData().then((response) => {
-      response.data.planets.map((item: any) => {
-        item.name === planetName && setPlanetPrice(item);
+    setInterval(() => {
+      getPlanetPriceData().then((response) => {
+        response.data.planets.map((item: any) => {
+          if (item.name === planetName) {
+            setPlanetPrice(item.price);
+            setAllDayPrice((prev: any) => [...prev, item.price]);
+          }
+        });
       });
-    });
+    }, 5000);
   }, []);
 
   return (
@@ -56,14 +55,19 @@ function DetailPlanetWrap() {
         <DetailPlanet />
       </Canvas>
       <PlanetInfo>
-        <InfoDiv>
-          <PlanetName>{planetPrice.name}</PlanetName>
-        </InfoDiv>
-        <InfoDiv>
-          <InfoKey>price</InfoKey>
-          <InfoValue>{planetPrice.price}₩</InfoValue>
-        </InfoDiv>
-        <div>{infoDiv()}</div>
+        <div>
+          <InfoDiv>
+            <PlanetName>{planetName}</PlanetName>
+          </InfoDiv>
+          <InfoDiv>
+            <InfoKey>price</InfoKey>
+            <InfoValue>{planetPrice} million ₩</InfoValue>
+          </InfoDiv>
+          <div>{infoDiv()}</div>
+        </div>
+        <div>
+          <Chart chartData={allDayPrice} />
+        </div>
       </PlanetInfo>
     </Wrap>
   );
@@ -74,13 +78,19 @@ export default DetailPlanetWrap;
 const Wrap = styled.div`
   width: 100vw;
   height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const PlanetInfo = styled.div`
   position: absolute;
   top: 20px;
-  left: 20px;
-  width: 300px;
-  height: 400px;
+  margin: 20px;
+  width: 95%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 const PlanetName = styled.div`
   font-size: 60px;
@@ -88,7 +98,6 @@ const PlanetName = styled.div`
   color: white;
 `;
 const InfoDiv = styled.div`
-  margin: 12px 4px;
   display: flex;
   flex-direction: row;
   align-items: center;
