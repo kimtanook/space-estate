@@ -16,6 +16,12 @@ function DetailPlanetWrap() {
   const [planetPrice, setPlanetPrice] = useState("");
   const [allDayPrice, setAllDayPrice] = useState<any>(["price"]);
 
+  // const {data: datas} = useQuery({
+  //   queryKey: ["getSpecificUser"],
+  //   queryFn: getPlanetPriceData,
+  //   staleTime: 1000,
+  // });
+
   const infoData: {[key: string]: {[key: string]: string}} = planetInfoData;
   const keys: string[] = Object.keys(infoData[planetName]);
   const infoDiv = () => {
@@ -30,17 +36,21 @@ function DetailPlanetWrap() {
     });
     return infoDiv;
   };
+  const getData = () => {
+    getPlanetPriceData().then((response) => {
+      response.data.planets.map((item: any) => {
+        if (item.name === planetName) {
+          setPlanetPrice(item.price);
+          setAllDayPrice((prev: any) => [...prev, item.price]);
+        }
+      });
+    });
+  };
 
   useEffect(() => {
+    getData();
     setInterval(() => {
-      getPlanetPriceData().then((response) => {
-        response.data.planets.map((item: any) => {
-          if (item.name === planetName) {
-            setPlanetPrice(item.price);
-            setAllDayPrice((prev: any) => [...prev, item.price]);
-          }
-        });
-      });
+      getData();
     }, 5000);
   }, []);
 
