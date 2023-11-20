@@ -33,7 +33,7 @@ function PlanetWrap() {
           decay={0}
         />
         <ambientLight intensity={0.4} />
-        <OrbitControls />
+        <OrbitControls enablePan={false} />
         <Planets />
       </Canvas>
       <TopMenu />
