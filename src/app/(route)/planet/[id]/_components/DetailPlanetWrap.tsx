@@ -4,6 +4,7 @@ import {getPlanetPriceData} from "@/utils/api";
 import {planetInfoData} from "@/utils/planetInfo";
 import {OrbitControls} from "@react-three/drei";
 import {Canvas} from "@react-three/fiber";
+import {format} from "date-fns";
 import {usePathname} from "next/navigation";
 import {useEffect, useState} from "react";
 import styled from "styled-components";
@@ -14,7 +15,7 @@ function DetailPlanetWrap() {
   const pathname = usePathname();
   const planetName: string = pathname.split("/planet/")[1];
   const [planetPrice, setPlanetPrice] = useState("");
-  const [allDayPrice, setAllDayPrice] = useState<any>(["price"]);
+  const [allDayPrice, setAllDayPrice] = useState<any>([]);
 
   // const {data: datas} = useQuery({
   //   queryKey: ["getSpecificUser"],
@@ -36,14 +37,27 @@ function DetailPlanetWrap() {
     });
     return infoDiv;
   };
+  let dataArray: any = [];
   const getData = () => {
     getPlanetPriceData().then((response) => {
       response.data.planets.map((item: any) => {
         if (item.name === planetName) {
           setPlanetPrice(item.price);
-          setAllDayPrice((prev: any) => [...prev, item.price]);
+          if (dataArray.length > 10) {
+            dataArray.shift();
+            dataArray.push({
+              price: item.price,
+              date: format(new Date(), "HH:mm:ss"),
+            });
+          } else {
+            dataArray.push({
+              price: item.price,
+              date: format(new Date(), "HH:mm:ss"),
+            });
+          }
         }
       });
+      setAllDayPrice([...dataArray]);
     });
   };
 
@@ -61,11 +75,11 @@ function DetailPlanetWrap() {
         style={{background: `url('/stars-map.jpg')`, backgroundSize: "cover"}}
       >
         <ambientLight intensity={1} />
-        <OrbitControls autoRotate />
+        <OrbitControls autoRotate enablePan={false} enableZoom={false} />
         <DetailPlanet />
       </Canvas>
       <PlanetInfo>
-        <div>
+        <InfoDivBox>
           <InfoDiv>
             <PlanetName>{planetName}</PlanetName>
           </InfoDiv>
@@ -74,10 +88,10 @@ function DetailPlanetWrap() {
             <InfoValue>{planetPrice} million ₩</InfoValue>
           </InfoDiv>
           <div>{infoDiv()}</div>
-        </div>
-        <div>
+        </InfoDivBox>
+        <ChartBox>
           <Chart chartData={allDayPrice} />
-        </div>
+        </ChartBox>
       </PlanetInfo>
     </Wrap>
   );
@@ -89,29 +103,24 @@ const Wrap = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
 `;
-const PlanetInfo = styled.div`
-  position: absolute;
-  top: 20px;
-  margin: 20px;
-  width: 95%;
-  height: 95%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
+const PlanetInfo = styled.div``;
 const PlanetName = styled.div`
   font-size: 60px;
   font-weight: 600;
   color: white;
+`;
+const InfoDivBox = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 5%;
 `;
 const InfoDiv = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   color: white;
+  width: 300px;
 `;
 const InfoKey = styled.div`
   padding: 4px;
@@ -119,4 +128,11 @@ const InfoKey = styled.div`
 const InfoValue = styled.div`
   margin-left: 20px;
   color: #ffd4d4;
+`;
+const ChartBox = styled.div`
+  width: 90vw;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0%);
 `;
