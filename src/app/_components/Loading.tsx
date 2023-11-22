@@ -1,3 +1,5 @@
+"use cline";
+
 import loadingImage from "@/img/icon/loading.png";
 import Image from "next/image";
 import styled from "styled-components";
@@ -13,6 +15,11 @@ function Loading() {
 export default Loading;
 
 const Wrap = styled.div`
+  z-index: 10;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;

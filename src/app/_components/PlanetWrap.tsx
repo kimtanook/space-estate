@@ -2,20 +2,14 @@
 
 import {OrbitControls} from "@react-three/drei";
 import {Canvas} from "@react-three/fiber";
-import {useEffect, useRef, useState} from "react";
+import {useRef} from "react";
 import styled from "styled-components";
 import Planets from "./Planets";
 import TopMenu from "./_menu/TopMenu";
 
 function PlanetWrap() {
   const canvasRef = useRef(null);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-  if (loading) {
-    return <></>;
-  }
+
   return (
     <Wrap>
       <Canvas

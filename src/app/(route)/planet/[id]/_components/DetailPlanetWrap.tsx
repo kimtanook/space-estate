@@ -1,12 +1,14 @@
 "use client";
 
 import {getPlanetPriceData} from "@/utils/api";
+import {LoadingState} from "@/utils/atom";
 import {planetInfoData} from "@/utils/planetInfo";
 import {OrbitControls} from "@react-three/drei";
 import {Canvas} from "@react-three/fiber";
 import {format} from "date-fns";
 import {usePathname} from "next/navigation";
 import {useEffect, useState} from "react";
+import {useRecoilState} from "recoil";
 import styled from "styled-components";
 import Chart from "./Chart";
 import DetailPlanet from "./DetailPlanet";
@@ -16,6 +18,7 @@ function DetailPlanetWrap() {
   const planetName: string = pathname.split("/planet/")[1];
   const [planetPrice, setPlanetPrice] = useState("");
   const [allDayPrice, setAllDayPrice] = useState<any>([]);
+  const [loading, setLoading] = useRecoilState(LoadingState);
 
   // const {data: datas} = useQuery({
   //   queryKey: ["getSpecificUser"],
@@ -62,6 +65,7 @@ function DetailPlanetWrap() {
   };
 
   useEffect(() => {
+    setLoading(false);
     getData();
     setInterval(() => {
       getData();
