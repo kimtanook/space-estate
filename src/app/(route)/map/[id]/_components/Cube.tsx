@@ -1,11 +1,10 @@
 import {Box} from "@react-three/drei";
 import {useFrame} from "@react-three/fiber";
 import {useEffect, useRef, useState} from "react";
-import {Mesh} from "three";
 import TWEEN from "three/examples/jsm/libs/tween.module.js";
 
 function Cube({controlRef, cameraRef}: any) {
-  const boxRef = useRef<Mesh>(null);
+  const boxRef = useRef<any>(null);
   const [xPosition, setXPosition] = useState(0);
   const [yPosition, setYPosition] = useState(0);
   const [zPosition, setZPosition] = useState(0);
@@ -41,7 +40,7 @@ function Cube({controlRef, cameraRef}: any) {
       .to(
         {
           x: xPosition,
-          y: yPosition,
+          y: yPosition + 0.6,
           z: zPosition,
         },
         100
@@ -79,7 +78,7 @@ function Cube({controlRef, cameraRef}: any) {
     };
   }, []);
 
-  return <Box name="box" ref={boxRef} />;
+  return <Box ref={boxRef} position={[0, 0.6, 0]} />;
 }
 
 export default Cube;
