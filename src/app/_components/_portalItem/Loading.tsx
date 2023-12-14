@@ -2,17 +2,26 @@
 
 import loadingImage from "@/img/icon/loading.png";
 import Image from "next/image";
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 
 function Loading() {
   return (
     <Wrap>
-      <Image src={loadingImage} alt="loading-image" width={40} height={40} />
+      <ImageBox src={loadingImage} alt="loading-image" width={40} height={40} />
     </Wrap>
   );
 }
 
 export default Loading;
+
+const rotateAnimation = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 const Wrap = styled.div`
   z-index: 10;
@@ -27,4 +36,8 @@ const Wrap = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: black;
+`;
+
+const ImageBox = styled(Image)`
+  animation: ${rotateAnimation} 2s linear infinite;
 `;

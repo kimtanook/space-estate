@@ -6,6 +6,11 @@ export const LoadingState = atom({
   default: true,
 });
 
+export const QuizState = atom({
+  key: `QuizState${uuidv4()}`,
+  default: false,
+});
+
 export const hoverPlanetState = atom({
   key: `hoverPlanetState${uuidv4()}`,
   default: "",

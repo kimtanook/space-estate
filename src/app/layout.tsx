@@ -12,6 +12,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     <html lang="en">
       <body>
         <RootProvider>{children}</RootProvider>
+        <div id="quiz"></div>
         <div id="loading"></div>
       </body>
     </html>

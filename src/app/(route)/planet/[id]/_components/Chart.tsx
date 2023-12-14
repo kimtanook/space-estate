@@ -15,6 +15,9 @@ function Chart({chartData}: any) {
       // 최저, 최고의 경우 line 차트, 평균의 경우 bar 차트로 지정
       price: "line",
     },
+    colors: {
+      price: "#e6baff",
+    },
   };
   useEffect(() => {
     const chart = c3.generate({

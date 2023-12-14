@@ -1,9 +1,9 @@
-import PlanetWrap from "./_components/PlanetWrap";
+import PlanetsWrap from "./_components/PlanetsWrap";
 
 export default function Home() {
   return (
     <div>
-      <PlanetWrap />
+      <PlanetsWrap />
     </div>
   );
 }

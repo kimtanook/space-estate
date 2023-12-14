@@ -6,7 +6,7 @@ import {planetInfoData} from "@/utils/planetInfo";
 import {OrbitControls} from "@react-three/drei";
 import {Canvas} from "@react-three/fiber";
 import {format} from "date-fns";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {useRecoilState} from "recoil";
 import styled from "styled-components";
@@ -14,6 +14,7 @@ import Chart from "./Chart";
 import DetailPlanet from "./DetailPlanet";
 
 function DetailPlanetWrap() {
+  const router = useRouter();
   const pathname = usePathname();
   const planetName: string = pathname.split("/planet/")[1];
   const [planetPrice, setPlanetPrice] = useState("");
@@ -26,14 +27,18 @@ function DetailPlanetWrap() {
   //   staleTime: 1000,
   // });
 
+  const profileRouter = () => {
+    router.push("/profile");
+  };
+
   const infoData: {[key: string]: {[key: string]: string}} = planetInfoData;
   const keys: string[] = Object.keys(infoData[planetName]);
   const infoDiv = () => {
     const infoDiv: any[] = [];
-    keys.forEach((key) => {
+    keys.forEach((key, index) => {
       const value = infoData[planetName][key];
       infoDiv.push(
-        <InfoDiv>
+        <InfoDiv key={index}>
           <InfoKey>{key}</InfoKey> <InfoValue>{value}</InfoValue>
         </InfoDiv>
       );
@@ -73,26 +78,37 @@ function DetailPlanetWrap() {
   }, []);
 
   return (
-    <Wrap>
+    <Wrap
+      style={{
+        background: `url('/stars-map.jpg')`,
+      }}
+    >
       <Canvas
         camera={{position: [0, 30000, 50000], far: 10000000}}
-        style={{background: `url('/stars-map.jpg')`, backgroundSize: "cover"}}
+        style={{
+          backgroundSize: "cover",
+          position: "fixed",
+        }}
       >
         <ambientLight intensity={1} />
         <OrbitControls autoRotate enablePan={false} enableZoom={false} />
         <DetailPlanet />
       </Canvas>
       <PlanetInfo>
-        <InfoDivBox>
-          <InfoDiv>
-            <PlanetName>{planetName}</PlanetName>
-          </InfoDiv>
-          <InfoDiv>
-            <InfoKey>price</InfoKey>
-            <InfoValue>{planetPrice} million ₩</InfoValue>
-          </InfoDiv>
-          <div>{infoDiv()}</div>
-        </InfoDivBox>
+        <TopBox>
+          <InfoDivBox>
+            <InfoDiv>
+              <PlanetName>{planetName}</PlanetName>
+            </InfoDiv>
+            <InfoDiv>
+              <InfoKey>price</InfoKey>
+              <InfoValue>{planetPrice} million (₩)</InfoValue>
+            </InfoDiv>
+            <div>{infoDiv()}</div>
+          </InfoDivBox>
+          <Button onClick={() => router.push(`/map/${planetName}`)}>Map</Button>
+          <Button onClick={() => router.push("/profile")}>Profile</Button>
+        </TopBox>
         <ChartBox>
           <Chart chartData={allDayPrice} />
         </ChartBox>
@@ -104,21 +120,31 @@ function DetailPlanetWrap() {
 export default DetailPlanetWrap;
 
 const Wrap = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+`;
+const PlanetInfo = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 40px;
 `;
-const PlanetInfo = styled.div``;
 const PlanetName = styled.div`
   font-size: 60px;
   font-weight: 600;
   color: white;
 `;
-const InfoDivBox = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 5%;
+const TopBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
 `;
+const InfoDivBox = styled.div``;
+
 const InfoDiv = styled.div`
   display: flex;
   flex-direction: row;
@@ -126,17 +152,25 @@ const InfoDiv = styled.div`
   color: white;
   width: 300px;
 `;
+const Button = styled.button`
+  height: 32px;
+  width: 80px;
+  margin: 0 4px;
+  z-index: 1;
+`;
+
 const InfoKey = styled.div`
   padding: 4px;
 `;
 const InfoValue = styled.div`
   margin-left: 20px;
-  color: #ffd4d4;
+  color: #e6baff;
 `;
 const ChartBox = styled.div`
   width: 90vw;
-  position: absolute;
+  margin: 0 auto;
+  /* position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translate(-50%, 0%);
+  transform: translate(-50%, 0%); */
 `;

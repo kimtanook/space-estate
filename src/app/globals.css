@@ -129,12 +129,12 @@ table {
   border-spacing: 0;
 }
 
-/* body {
-  -ms-overflow-style: none;
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-::-webkit-scrollbar {
-  display: none;
-} */
 
 .c3-axis-y text {
   fill: white;

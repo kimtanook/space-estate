@@ -7,7 +7,7 @@ import * as THREE from "three";
 import {Mesh, Object3D, TextureLoader} from "three";
 import TWEEN from "three/examples/jsm/libs/tween.module.js";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js";
-import Loading from "./Loading";
+import Loading from "./_portalItem/Loading";
 
 function Planet({
   name,

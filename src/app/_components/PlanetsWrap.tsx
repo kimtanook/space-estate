@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Planets from "./Planets";
 import TopMenu from "./_menu/TopMenu";
 
-function PlanetWrap() {
+function PlanetsWrap() {
   const canvasRef = useRef(null);
 
   return (
@@ -35,7 +35,7 @@ function PlanetWrap() {
   );
 }
 
-export default PlanetWrap;
+export default PlanetsWrap;
 const Wrap = styled.div`
   width: 100vw;
   height: 100vh;
