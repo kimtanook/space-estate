@@ -1,7 +1,7 @@
 import {Box} from "@react-three/drei";
 import {useFrame} from "@react-three/fiber";
 import {useEffect, useRef, useState} from "react";
-import {AnimationMixer, Mesh} from "three";
+import {Mesh} from "three";
 import TWEEN from "three/examples/jsm/libs/tween.module.js";
 
 function Cube({controlRef, cameraRef}: any) {
@@ -11,7 +11,6 @@ function Cube({controlRef, cameraRef}: any) {
   const [zPosition, setZPosition] = useState(0);
   const [useRunningAnimation, setUseRunningAnimation] = useState(false); // Added state variable
 
-  const mixer = useRef<AnimationMixer>();
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "w") {
       setZPosition((prev) => prev - 1);
@@ -70,12 +69,6 @@ function Cube({controlRef, cameraRef}: any) {
     cameraRef.current.lookAt(boxRef.current?.position);
     cameraRef.current.rotation.set(-0.2, 0, 0);
   });
-  useFrame((state, delta) => {
-    // Update the animation mixer on each frame
-    if (mixer.current) {
-      mixer.current.update(delta);
-    }
-  });
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -86,7 +79,7 @@ function Cube({controlRef, cameraRef}: any) {
     };
   }, []);
 
-  return <Box ref={boxRef} scale={1} />;
+  return <Box name="box" ref={boxRef} />;
 }
 
 export default Cube;
