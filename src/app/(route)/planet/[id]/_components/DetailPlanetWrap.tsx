@@ -106,7 +106,12 @@ function DetailPlanetWrap() {
             <div>{infoDiv()}</div>
           </InfoDivBox>
           <ButtonBox>
-            <Button onClick={() => router.push(`/map/${planetName}`)}>
+            <Button
+              onClick={() => {
+                router.push(`/map/${planetName}`);
+                setLoading(true);
+              }}
+            >
               Map
             </Button>
             <Button onClick={() => router.push("/profile")}>Profile</Button>
