@@ -1,9 +1,11 @@
+import {authService} from "@/utils/firebase";
 import {Box} from "@react-three/drei";
 import {useFrame} from "@react-three/fiber";
 import {useEffect, useRef, useState} from "react";
 import TWEEN from "three/examples/jsm/libs/tween.module.js";
 
 function Cube({controlRef, cameraRef}: any) {
+  const user = authService.currentUser;
   const boxRef = useRef<any>(null);
   const [xPosition, setXPosition] = useState(0);
   const [yPosition, setYPosition] = useState(0);

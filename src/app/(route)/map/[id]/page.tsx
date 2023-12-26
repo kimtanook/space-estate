@@ -1,9 +1,10 @@
-import MapWrap from "./_components/MapWrap";
+import PhysicsScene from "./_components/PhysicsScene";
 
 function MapPage() {
   return (
     <div>
-      <MapWrap />
+      {/* <MapWrap /> */}
+      <PhysicsScene />
     </div>
   );
 }

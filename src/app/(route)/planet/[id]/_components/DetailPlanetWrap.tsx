@@ -86,7 +86,6 @@ function DetailPlanetWrap() {
       <Canvas
         camera={{position: [0, 30000, 50000], far: 10000000}}
         style={{
-          backgroundSize: "cover",
           position: "fixed",
         }}
       >
@@ -106,8 +105,12 @@ function DetailPlanetWrap() {
             </InfoDiv>
             <div>{infoDiv()}</div>
           </InfoDivBox>
-          <Button onClick={() => router.push(`/map/${planetName}`)}>Map</Button>
-          <Button onClick={() => router.push("/profile")}>Profile</Button>
+          <ButtonBox>
+            <Button onClick={() => router.push(`/map/${planetName}`)}>
+              Map
+            </Button>
+            <Button onClick={() => router.push("/profile")}>Profile</Button>
+          </ButtonBox>
         </TopBox>
         <ChartBox>
           <Chart chartData={allDayPrice} />
@@ -130,33 +133,40 @@ const PlanetInfo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0 40px;
 `;
 const PlanetName = styled.div`
   font-size: 60px;
   font-weight: 600;
   color: white;
+  @media screen and (max-width: 475px) {
+    font-size: 40px;
+  }
 `;
 const TopBox = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 20px;
+  margin: 20px;
 `;
-const InfoDivBox = styled.div``;
+const InfoDivBox = styled.div`
+  @media screen and (max-width: 475px) {
+    font-size: 12px;
+    /* position: absolute; */
+  }
+`;
 
 const InfoDiv = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   color: white;
-  width: 300px;
+`;
+const ButtonBox = styled.div`
+  z-index: 1;
 `;
 const Button = styled.button`
   height: 32px;
-  width: 80px;
-  margin: 0 4px;
-  z-index: 1;
+  margin: 4px;
 `;
 
 const InfoKey = styled.div`
